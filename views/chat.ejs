@@ -1,0 +1,27 @@
+<% include layout %>
+
+<body>
+    <div id="chat" class='box'>
+        <div class="chatWrap">
+            <div class="left">
+                <div class="chatLog" id='chatLog'>
+                </div>
+                <div class="inputWrap"><input type='text' id='chatInput' maxlength='200' placeholder='내용을 입력하세요...' /></div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var socket = io.connect('<%=io_url%>');
+        $("#chatInput").keyup(function(event) {
+            if (event.which == 13) {
+                socket.emit('fromclient',{msg:$('#chatInput').val()});
+                $('#chatInput').val('');
+            }
+        });
+        socket.on('toclient',function(data){
+            console.log(data.msg);
+            $('#chatLog').append(data.msg+'<BR>');
+        });
+    </script>
+</body>
+</html>
